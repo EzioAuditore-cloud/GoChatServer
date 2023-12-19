@@ -1,0 +1,9 @@
+syntax = "proto3";  //指定版本
+option go_package="../;gproto";
+package gproto;
+
+message ClientMessage {
+    string Sender = 1; //发送者
+    string Recipient = 2; //接收者
+    string Content = 3; //发送内容
+}
