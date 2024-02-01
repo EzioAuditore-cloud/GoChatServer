@@ -70,21 +70,8 @@ func (srv *Server) BroadCast(client *Client, msg string) {
 	srv.BroadcastChannel <- sendMsg
 }
 
-func (srv *Server) Login(conn net.Conn) *Client {
-	var client *Client
-	srv.mapLock.Lock()
-	if v, ok := srv.ClientMap[conn.RemoteAddr().String()]; !ok {
-		client = NewClient(conn, srv)
-	} else {
-		client = v
-	}
-	srv.mapLock.Unlock()
-	srv.BroadCast(client, "已上线")
-	return client
-}
-
 func (srv *Server) Handler(conn net.Conn) {
-	client := srv.Login(conn)
+	client := Login(conn, srv)
 	fmt.Printf("%v连接成功\n", client.ID)
 	defer func() {
 		e := recover()

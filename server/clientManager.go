@@ -59,6 +59,19 @@ func (c *Client) ListenSend() {
 	}
 }
 
+func Login(conn net.Conn, srv *Server) *Client {
+	var client *Client
+	srv.mapLock.Lock()
+	if v, ok := srv.ClientMap[conn.RemoteAddr().String()]; !ok {
+		client = NewClient(conn, srv)
+	} else {
+		client = v
+	}
+	srv.mapLock.Unlock()
+	srv.BroadCast(client, "已上线")
+	return client
+}
+
 func (c *Client) Logout() {
 	srv := c.Srv
 	srv.BroadCast(c, "已下线")
