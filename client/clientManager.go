@@ -1,50 +1,50 @@
 package client
 
-import (
-	gproto "gochatserver/model"
+// import (
+// 	gproto "gochatserver/model"
 
-	"google.golang.org/protobuf/proto"
-)
+// 	"google.golang.org/protobuf/proto"
+// )
 
-type ClientManager struct {
-	clients    map[*Client]bool
-	broadcast  chan []byte
-	register   chan *Client
-	unregister chan *Client
-}
+// type ClientManager struct {
+// 	Clients    map[*Client]bool
+// 	Broadcast  chan []byte
+// 	Register   chan *Client
+// 	Unregister chan *Client
+// }
 
-func (manager *ClientManager) send(msg []byte, ignore *Client) {
-	for conn := range manager.clients {
-		if conn != ignore {
-			conn.send <- msg
-		}
-	}
-}
+// func (manager *ClientManager) Send(msg []byte, ignore *Client) {
+// 	for conn := range manager.Clients {
+// 		if conn != ignore {
+// 			conn.SendBytes <- msg
+// 		}
+// 	}
+// }
 
-func (manager *ClientManager) start() {
-	for {
-		select {
-		case conn := <-manager.register:
-			manager.clients[conn] = true
-			msgBytes, _ := proto.Marshal(&gproto.ClientMessage{Content: "/A new socket has connected."})
-			manager.send(msgBytes, conn)
-		case conn := <-manager.unregister:
-			if _, ok := manager.clients[conn]; ok {
-				close(conn.send)
-				delete(manager.clients, conn)
-				// manager.clients[conn] = false
-				msgBytes, _ := proto.Marshal(&gproto.ClientMessage{Content: "/A new socket has disconnected."})
-				manager.send(msgBytes, conn)
-			}
-		case msg := <-manager.broadcast:
-			for conn := range manager.clients {
-				select {
-				case conn.send <- msg:
-				default:
-					close(conn.send)
-					delete(manager.clients, conn)
-				}
-			}
-		}
-	}
-}
+// func (manager *ClientManager) Start() {
+// 	for {
+// 		select {
+// 		case conn := <-manager.Register:
+// 			manager.Clients[conn] = true
+// 			msgBytes, _ := proto.Marshal(&gproto.ClientMessage{Content: "/A new socket has connected."})
+// 			manager.Send(msgBytes, conn)
+// 		case conn := <-manager.Unregister:
+// 			if _, ok := manager.Clients[conn]; ok {
+// 				close(conn.SendBytes)
+// 				delete(manager.Clients, conn)
+// 				// manager.clients[conn] = false
+// 				msgBytes, _ := proto.Marshal(&gproto.ClientMessage{Content: "/A new socket has disconnected."})
+// 				manager.Send(msgBytes, conn)
+// 			}
+// 		case msg := <-manager.Broadcast:
+// 			for conn := range manager.Clients {
+// 				select {
+// 				case conn.SendBytes <- msg:
+// 				default:
+// 					close(conn.SendBytes)
+// 					delete(manager.Clients, conn)
+// 				}
+// 			}
+// 		}
+// 	}
+// }

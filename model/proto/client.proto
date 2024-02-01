@@ -7,3 +7,15 @@ message ClientMessage {
     string Recipient = 2; //接收者
     string Content = 3; //发送内容
 }
+
+message UserRegisterReq {
+    string Name = 1;    //用户名
+}
+
+message UserRegisterResp {
+    int32 Result = 1;   //响应结果
+}
+
+service CenterService {
+    rpc Register (UserRegisterReq) returns (UserRegisterResp) {}
+}
