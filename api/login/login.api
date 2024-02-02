@@ -1,0 +1,16 @@
+syntax = "v1"
+
+type (
+	LoginReq {
+		Name string `json:"name"`
+	}
+	LoginResp {
+		Result int32 `json:"result"`
+	}
+)
+
+service login-api {
+	@handler Login
+	post /login (LoginReq) returns (LoginResp)
+}
+

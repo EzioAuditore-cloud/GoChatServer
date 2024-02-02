@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package server;
+option go_package="./server";
+
+message Request {
+  string ping = 1;
+}
+
+message Response {
+  string pong = 1;
+}
+
+service Server {
+  rpc Ping(Request) returns(Response);
+}
